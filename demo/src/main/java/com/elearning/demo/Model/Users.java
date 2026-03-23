@@ -28,6 +28,9 @@ public class Users implements UserDetails {
 
     @Column(name = "Password")
     private String password;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PostModel> posts;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
