@@ -24,4 +24,14 @@ public class ProductController {
     public List<Products> getAllProducts() {
         return productServiceImp.findAllProducts();
     }
+
+    @GetMapping("/product")
+    public List<Products> getProductsByName(@RequestParam String name) {
+        return productServiceImp.findProductByName(name);
+    }
 }
+
+
+
+
+

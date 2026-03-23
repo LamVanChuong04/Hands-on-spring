@@ -27,6 +27,11 @@ public class ProductServiceImp implements IProductService {
 
     @Override
     public List<Products> findAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findAllProducts();
+    }
+
+    @Override
+    public List<Products> findProductByName(String name) {
+        return productRepository.findByProductName(name);
     }
 }

@@ -11,4 +11,6 @@ public interface IProductService {
     public void addProduct(Products product);
 
     public List<Products> findAllProducts();
+
+    public List<Products> findProductByName(String name);
 }
