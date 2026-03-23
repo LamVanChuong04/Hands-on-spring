@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: demo
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/elearning_db
+    username: postgres
+    password: 250104
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+  session:
+    store-type: jdbc
+    timeout: 10m
+    jdbc:
+      initialize-schema: always
+    cookie:
+      name: my_cookie
+      http-only: true
+      secure: true
+#  security:
+#    user:
+#      name: chuong
+#      password: 123456
