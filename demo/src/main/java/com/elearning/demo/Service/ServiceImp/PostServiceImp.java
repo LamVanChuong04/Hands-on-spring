@@ -9,6 +9,7 @@ import com.elearning.demo.Repository.UserRepository;
 import com.elearning.demo.Service.IService.IPostService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class PostServiceImp implements IPostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+
     public PostServiceImp(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
@@ -36,7 +38,7 @@ public class PostServiceImp implements IPostService {
     }
 
     @Override
-    public List<PostResponse> findAllPosts() {
+    public List<PostResponse> getAllPosts() {
         List<PostModel> posts = postRepository.findAll();
 
         return posts.stream().map(post -> {
@@ -47,4 +49,16 @@ public class PostServiceImp implements IPostService {
             return postResponse;
         }).collect(Collectors.toList());
     }
+
+    @Transactional
+    @Override
+    public void updatePost(Long postId,  PostDto postDto) {
+        PostModel post = postRepository.findById(postId).orElseThrow(
+                ()-> new RuntimeException("Khong tim thay bai post voi id = "+ postId));
+        post.setPostContent(postDto.getPostContent());
+        post.setPostTitle(postDto.getPostTitle());
+    }
 }
+
+
+

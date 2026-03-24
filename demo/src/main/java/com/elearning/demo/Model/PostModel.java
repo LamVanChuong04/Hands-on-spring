@@ -26,4 +26,7 @@ public class PostModel {
     @JoinColumn(name = "user_id") // khóa ngoại trong bảng posts
     private Users user;
 
+    @Version
+    private Long version;
+
 }

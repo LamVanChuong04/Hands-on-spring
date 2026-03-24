@@ -11,5 +11,6 @@ import java.util.List;
 public interface IPostService {
     public void createPost(PostDto postDto);
 
-    public List<PostResponse> findAllPosts();
+    public List<PostResponse> getAllPosts();
+    public void updatePost(Long postId, PostDto postDto);
 }

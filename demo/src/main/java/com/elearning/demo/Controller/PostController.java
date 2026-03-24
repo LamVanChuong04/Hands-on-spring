@@ -24,6 +24,12 @@ public class PostController {
 
     @GetMapping("/posts")
     public List<PostResponse> findAllPosts() {
-        return postServiceImp.findAllPosts();
+        return postServiceImp.getAllPosts();
+    }
+
+    @PutMapping("/posts/{id}")
+    public String updatePost(@PathVariable Long id, @RequestBody PostDto postDto) {
+        postServiceImp.updatePost(id, postDto);
+        return "Updated post successfully";
     }
 }
