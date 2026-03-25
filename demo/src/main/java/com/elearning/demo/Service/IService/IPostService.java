@@ -12,5 +12,10 @@ public interface IPostService {
     public void createPost(PostDto postDto);
 
     public List<PostResponse> getAllPosts();
-    public void updatePost(Long postId, PostDto postDto);
+    public PostModel updatePost(Long postId, PostDto postDto);
+    public PostModel updatePostWithPessimistic(Long postId, PostDto postDto);
+    // optimistic locking
+    public void testOptimisticLockingt(Long postId, PostDto postDto) throws InterruptedException;
+
+
 }

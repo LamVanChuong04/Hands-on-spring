@@ -52,12 +52,65 @@ public class PostServiceImp implements IPostService {
 
     @Transactional
     @Override
-    public void updatePost(Long postId,  PostDto postDto) {
+    public PostModel updatePost(Long postId,  PostDto postDto) {
+
         PostModel post = postRepository.findById(postId).orElseThrow(
                 ()-> new RuntimeException("Khong tim thay bai post voi id = "+ postId));
+
+        // thread current run
+        System.out.println(Thread.currentThread().getName() + "fetch post with version " + post.getVersion());
+        System.out.println("-------");
         post.setPostContent(postDto.getPostContent());
         post.setPostTitle(postDto.getPostTitle());
+        return postRepository.saveAndFlush(post);
     }
+    @Transactional
+    @Override
+    public PostModel updatePostWithPessimistic(Long postId, PostDto postDto) {
+        System.out.println(Thread.currentThread().getName()+ " is watching post");
+
+        PostModel post = postRepository.findPostByIdAndLock(postId);
+
+        System.out.println(Thread.currentThread().getName()+ " is watching post with version " + post.getVersion());
+        post.setPostContent(postDto.getPostContent());
+        post.setPostTitle(postDto.getPostTitle());
+
+        return postRepository.save(post);
+
+    }
+
+
+    @Override
+    public void testOptimisticLockingt(Long postId, PostDto postDto) throws InterruptedException{
+        // 2 thread
+        Thread th1 = new Thread(()->{
+            try{
+                System.out.println(Thread.currentThread().getName()+ " is watching post");
+                PostModel post = updatePost(postId, postDto);
+                System.out.println(Thread.currentThread().getName()+ " updated post successful with version "+ post.getVersion());
+            }catch (Exception ex){
+                System.out.println(Thread.currentThread().getName() + " failed : " + ex.getMessage());
+            }
+        });
+
+        Thread th2 = new Thread(()->{
+            try{
+                System.out.println(Thread.currentThread().getName()+ " is watching post");
+                PostModel post = updatePost(postId, postDto);
+                System.out.println(Thread.currentThread().getName()+ " updated post successful with version "+ post.getVersion());
+            }catch (Exception ex){
+                System.out.println(Thread.currentThread().getName() + " failed : " + ex.getMessage());
+            }
+        });
+        th1.start();
+        th2.start();
+        th1.join();
+        th2.join();
+    }
+
+
+
+
 }
 
 

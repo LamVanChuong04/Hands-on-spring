@@ -18,6 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,  PostRepository postRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -42,6 +43,7 @@ public class UserService {
                 PostResponse postResponse = new PostResponse();
                 postResponse.setPostContent(post.getPostContent());
                 postResponse.setPostTitle(post.getPostTitle());
+                postResponse.setUserId(user.getId());
                 return postResponse;
             }).toList();
 
