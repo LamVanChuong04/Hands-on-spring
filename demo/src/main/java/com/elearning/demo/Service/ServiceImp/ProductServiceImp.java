@@ -3,6 +3,7 @@ package com.elearning.demo.Service.ServiceImp;
 import com.elearning.demo.Model.Products;
 import com.elearning.demo.Repository.ProductRepository;
 import com.elearning.demo.Service.IService.IProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +34,30 @@ public class ProductServiceImp implements IProductService {
     @Override
     public List<Products> findProductByName(String name) {
         return productRepository.findByProductName(name);
+    }
+
+    @Transactional
+    @Override
+    public Products updateProduct(Long productId) {
+        System.out.println(Thread.currentThread().getName()+ " is reading data");
+
+        Products pr = productRepository.findById(productId).orElseThrow(
+                ()-> new RuntimeException("product not found"));
+
+        System.out.println(Thread.currentThread().getName()+ " stock = " + pr.getProductStock());
+        pr.setProductStock(pr.getProductStock() - 1);
+
+        return productRepository.save(pr);
+
+
+    }
+    @Transactional
+    @Override
+    public void automicUpdateProduct(Long productId) {
+        int updated = productRepository.atomicUpdate(productId);
+        if (updated==0){
+            throw new RuntimeException(" Updated failed");
+        }
+
     }
 }

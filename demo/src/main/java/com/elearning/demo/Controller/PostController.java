@@ -30,7 +30,7 @@ public class PostController {
         return postServiceImp.getAllPosts();
     }
 
-    @PutMapping("/posts/{id}")
+    @PutMapping("/posts-test-optimistic/{id}")
     public String updatePost(@PathVariable Long id, @RequestBody PostDto postDto) throws InterruptedException {
         postServiceImp.testOptimisticLockingt(id, postDto);
         return "OPTIMISTIC LOCKING: -----------Updated post successfully";
