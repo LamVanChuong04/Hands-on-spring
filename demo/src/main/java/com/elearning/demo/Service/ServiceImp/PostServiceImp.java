@@ -8,6 +8,9 @@ import com.elearning.demo.Repository.PostRepository;
 import com.elearning.demo.Repository.UserRepository;
 import com.elearning.demo.Service.IService.IPostService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 
@@ -23,7 +26,7 @@ public class PostServiceImp implements IPostService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
-
+    @CacheEvict(value = "posts", allEntries = true)
     @Override
     @Transactional
     public void createPost(PostDto postDto) {
@@ -36,7 +39,7 @@ public class PostServiceImp implements IPostService {
 
         postRepository.save(post);
     }
-
+    @Cacheable(value = "posts", key = "'all'")
     @Override
     public List<PostResponse> getAllPosts() {
         List<PostModel> posts = postRepository.findAll();

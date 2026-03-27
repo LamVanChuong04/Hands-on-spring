@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mydb:
+    container_name: my_db
+    image: postgres:16
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: elearning_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 250104
+    networks:
+      - bridge-network
+
+  myapp:
+    build: .
+    container_name: my_project
+    image: myapp:last
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://mydb:5432/elearning_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 250104
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - mydb
+    networks:
+      - bridge-network
+
+networks:
+  bridge-network:
+    driver: bridge
