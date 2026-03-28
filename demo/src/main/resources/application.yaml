@@ -2,7 +2,7 @@ spring:
   application:
     name: demo
   datasource:
-    url: ${DBMS_CONNECTION:jdbc:postgresql://mydb:5432/elearning_db}
+    url: ${DBMS_CONNECTION:jdbc:postgresql://localhost:5432/elearning_db}
     username: ${DBMS_USERNAME:postgres}
     password: ${DBMS_PASSWORD:250104}
   jpa:

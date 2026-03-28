@@ -3,6 +3,7 @@ package com.elearning.demo.Service.ServiceImp;
 import com.elearning.demo.Dto.Request.PostDto;
 import com.elearning.demo.Model.PostModel;
 import org.hibernate.PessimisticLockException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +13,7 @@ public class TestPessimisticLockService {
     public TestPessimisticLockService(PostServiceImp postServiceImp) {
         this.postServiceImp = postServiceImp;
     }
-
+    @CacheEvict(value = "posts", allEntries = true)
     public void testPessimisticLocking(Long postId, PostDto postDto) throws InterruptedException {
         // 2 thread
         Thread th1 = new Thread(()->{

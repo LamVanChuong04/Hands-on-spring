@@ -4,6 +4,8 @@ import com.elearning.demo.Model.Products;
 import com.elearning.demo.Repository.ProductRepository;
 import com.elearning.demo.Service.IService.IProductService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,17 +27,17 @@ public class ProductServiceImp implements IProductService {
         productRepository.save(pr);
 
     }
-
+    @Cacheable(value = "products", key = "'all'")
     @Override
     public List<Products> findAllProducts() {
         return productRepository.findAllProducts();
     }
-
+    @Cacheable(value = "products", key = "#name")
     @Override
     public List<Products> findProductByName(String name) {
         return productRepository.findByProductName(name);
     }
-
+    @CacheEvict(value = "products", allEntries = true)
     @Transactional
     @Override
     public Products updateProduct(Long productId) {
@@ -51,6 +53,7 @@ public class ProductServiceImp implements IProductService {
 
 
     }
+    @CacheEvict(value = "products", allEntries = true)
     @Transactional
     @Override
     public void automicUpdateProduct(Long productId) {
