@@ -1,8 +1,8 @@
 package com.elearning.demo.Controller;
 
+import com.elearning.demo.Dto.Response.UserResponse;
 import com.elearning.demo.Model.Users;
 import com.elearning.demo.Service.UserService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class HomePage {
-    private UserService userService;
-    private UserDetailsService userDetailsService;
-    public HomePage(UserService userService, UserDetailsService userDetailsService) {
+@RequestMapping("/api/v1")
+public class UserController {
+    private final UserService userService;
+    private final UserDetailsService userDetailsService;
+    public UserController(UserService userService, UserDetailsService userDetailsService) {
         this.userService = userService;
         this.userDetailsService = userDetailsService;
     }
@@ -39,8 +40,8 @@ public class HomePage {
         );
     }
 
-    @GetMapping("/all")
-    public List<Users> allUsers(){
+    @GetMapping("/users")
+    public List<UserResponse> allUsers(){
         return userService.getAllUsers();
     }
 

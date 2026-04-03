@@ -13,4 +13,8 @@ public interface IProductService {
     public List<Products> findAllProducts();
 
     public List<Products> findProductByName(String name);
+
+    public Products updateProduct(Long productId);
+
+    public void automicUpdateProduct(Long productId);
 }

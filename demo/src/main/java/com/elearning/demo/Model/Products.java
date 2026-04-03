@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Length;
 
 import java.math.BigDecimal;
 
@@ -31,5 +30,9 @@ public class Products {
 
     @Column(name = "product_stock")
     private Integer productStock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderDetailId")
+    private OrderDetails order_details;
 
 }

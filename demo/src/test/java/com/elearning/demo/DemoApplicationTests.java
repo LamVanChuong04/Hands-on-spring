@@ -1,6 +1,6 @@
 package com.elearning.demo;
 
-import com.elearning.demo.Model.PostModel;
+import com.elearning.demo.Model.Posts;
 import com.elearning.demo.Repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class DemoApplicationTests {
     @Test
     void testOptimisticLocking() throws InterruptedException {
         // 1. Tạo dữ liệu mẫu
-        PostModel post = new PostModel();
+        Posts post = new Posts();
         post.setPostTitle("Gốc");
         post = postRepository.save(post);
         Long postId = post.getPostId();
@@ -35,7 +35,7 @@ class DemoApplicationTests {
         // LUỒNG A (Chạy chậm - Sẽ bị lỗi Version)
         executor.execute(() -> {
             try {
-                PostModel postA = postRepository.findById(postId).get();
+                Posts postA = postRepository.findById(postId).get();
                 Thread.sleep(1000); // Ngủ để luồng B thắng trước
                 postA.setPostTitle("Admin A");
                 postRepository.save(postA);
@@ -49,7 +49,7 @@ class DemoApplicationTests {
         // LUỒNG B (Chạy nhanh - Sẽ thắng)
         executor.execute(() -> {
             try {
-                PostModel postB = postRepository.findById(postId).get();
+                Posts postB = postRepository.findById(postId).get();
                 postB.setPostTitle("Admin B");
                 postRepository.save(postB);
                 System.out.println(">>> LUỒNG B THÀNH CÔNG");
