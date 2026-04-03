@@ -8,9 +8,9 @@ services:
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_DB: elearning_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 250104
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASS}
     networks:
       - bridge-network
 
@@ -21,9 +21,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://mydb:5432/elearning_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 250104
+      SPRING_DATASOURCE_URL: jdbc:postgresql://mydb:5432/${DATABASE_NAME}
+      SPRING_DATASOURCE_USERNAME: ${USER}
+      SPRING_DATASOURCE_PASSWORD: ${PASS}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       - mydb
