@@ -2,21 +2,20 @@ package com.elearning.demo.Service.ServiceImp;
 
 import com.elearning.demo.Dto.Request.PostDto;
 import com.elearning.demo.Dto.Response.PostResponse;
-import com.elearning.demo.Model.PostModel;
+import com.elearning.demo.Model.Posts;
 import com.elearning.demo.Model.Users;
 import com.elearning.demo.Repository.PostRepository;
 import com.elearning.demo.Repository.UserRepository;
 import com.elearning.demo.Service.IService.IPostService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class PostServiceImp implements IPostService {
     private final UserRepository userRepository;
@@ -30,7 +29,7 @@ public class PostServiceImp implements IPostService {
     @Override
     @Transactional
     public void createPost(PostDto postDto) {
-        PostModel post = new PostModel();
+        Posts post = new Posts();
         Users userProxy = userRepository.getReferenceById(postDto.getUserId());
 
         post.setPostContent(postDto.getPostContent());
@@ -42,22 +41,23 @@ public class PostServiceImp implements IPostService {
     @Cacheable(value = "posts", key = "'all'")
     @Override
     public List<PostResponse> getAllPosts() {
-        List<PostModel> posts = postRepository.findAll();
-
+        List<Posts> posts = postRepository.findAll();
+        log.debug("inside getAllPosts() method");
         return posts.stream().map(post -> {
             PostResponse postResponse = new PostResponse();
             postResponse.setPostContent(post.getPostContent());
             postResponse.setPostTitle(post.getPostTitle());
             postResponse.setUserId(post.getUser().getId());
+
             return postResponse;
         }).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public PostModel updatePost(Long postId,  PostDto postDto) {
+    public Posts updatePost(Long postId, PostDto postDto) {
 
-        PostModel post = postRepository.findById(postId).orElseThrow(
+        Posts post = postRepository.findById(postId).orElseThrow(
                 ()-> new RuntimeException("Khong tim thay bai post voi id = "+ postId));
 
         // thread current run
@@ -69,10 +69,10 @@ public class PostServiceImp implements IPostService {
     }
     @Transactional
     @Override
-    public PostModel updatePostWithPessimistic(Long postId, PostDto postDto) {
+    public Posts updatePostWithPessimistic(Long postId, PostDto postDto) {
         System.out.println(Thread.currentThread().getName()+ " is watching post");
 
-        PostModel post = postRepository.findPostByIdAndLock(postId);
+        Posts post = postRepository.findPostByIdAndLock(postId);
 
         System.out.println(Thread.currentThread().getName()+ " is watching post with version " + post.getVersion());
         post.setPostContent(postDto.getPostContent());
@@ -89,7 +89,7 @@ public class PostServiceImp implements IPostService {
         Thread th1 = new Thread(()->{
             try{
                 System.out.println(Thread.currentThread().getName()+ " is watching post");
-                PostModel post = updatePost(postId, postDto);
+                Posts post = updatePost(postId, postDto);
                 System.out.println(Thread.currentThread().getName()+ " updated post successful with version "+ post.getVersion());
             }catch (Exception ex){
                 System.out.println(Thread.currentThread().getName() + " failed : " + ex.getMessage());
@@ -99,7 +99,7 @@ public class PostServiceImp implements IPostService {
         Thread th2 = new Thread(()->{
             try{
                 System.out.println(Thread.currentThread().getName()+ " is watching post");
-                PostModel post = updatePost(postId, postDto);
+                Posts post = updatePost(postId, postDto);
                 System.out.println(Thread.currentThread().getName()+ " updated post successful with version "+ post.getVersion());
             }catch (Exception ex){
                 System.out.println(Thread.currentThread().getName() + " failed : " + ex.getMessage());

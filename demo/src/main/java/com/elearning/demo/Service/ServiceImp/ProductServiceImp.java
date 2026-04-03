@@ -4,6 +4,7 @@ import com.elearning.demo.Model.Products;
 import com.elearning.demo.Repository.ProductRepository;
 import com.elearning.demo.Service.IService.IProductService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductServiceImp implements IProductService {
     private final ProductRepository productRepository;
     public ProductServiceImp(ProductRepository productRepository) {
@@ -30,6 +32,7 @@ public class ProductServiceImp implements IProductService {
     @Cacheable(value = "products", key = "'all'")
     @Override
     public List<Products> findAllProducts() {
+        log.info("Getting all products");
         return productRepository.findAllProducts();
     }
     @Cacheable(value = "products", key = "#name")

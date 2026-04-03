@@ -5,6 +5,9 @@ import com.elearning.demo.Dto.Response.UserResponse;
 import com.elearning.demo.Model.Users;
 import com.elearning.demo.Repository.PostRepository;
 import com.elearning.demo.Repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.postRepository = postRepository;
     }
-
+    @Transactional
+    @CacheEvict(allEntries = true, value = "users")
     public String addUser(Users user) {
         Users newUser = new Users();
         newUser.setUsername(user.getUsername());
@@ -32,6 +36,7 @@ public class UserService {
         userRepository.save(newUser);
         return "Add user successfully!";
     }
+    @Cacheable(value = "users", key = "'all'")
     public List<UserResponse> getAllUsers() {
         List<Users> users = userRepository.findAll();
 

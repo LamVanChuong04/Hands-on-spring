@@ -6,15 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Entity
 @Table(name = "posts")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostModel {
+public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;

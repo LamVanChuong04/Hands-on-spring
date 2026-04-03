@@ -2,7 +2,6 @@ package com.elearning.demo.Controller;
 
 import com.elearning.demo.Dto.Request.PostDto;
 import com.elearning.demo.Dto.Response.PostResponse;
-import com.elearning.demo.Model.PostModel;
 import com.elearning.demo.Service.ServiceImp.PostServiceImp;
 import com.elearning.demo.Service.ServiceImp.TestPessimisticLockService;
 import org.springframework.web.bind.annotation.*;

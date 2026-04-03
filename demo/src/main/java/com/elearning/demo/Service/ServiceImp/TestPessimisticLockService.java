@@ -1,8 +1,7 @@
 package com.elearning.demo.Service.ServiceImp;
 
 import com.elearning.demo.Dto.Request.PostDto;
-import com.elearning.demo.Model.PostModel;
-import org.hibernate.PessimisticLockException;
+import com.elearning.demo.Model.Posts;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ public class TestPessimisticLockService {
         // 2 thread
         Thread th1 = new Thread(()->{
             try{
-                PostModel post = postServiceImp.updatePostWithPessimistic(postId, postDto);
+                Posts post = postServiceImp.updatePostWithPessimistic(postId, postDto);
                 System.out.println(Thread.currentThread().getName()+ " Currently version "+ post.getVersion());
             }catch (RuntimeException ex){
                 System.out.println(Thread.currentThread().getName() + "Updated failed : " + ex.getMessage());
@@ -27,7 +26,7 @@ public class TestPessimisticLockService {
 
         Thread th2 = new Thread(()->{
             try{
-                PostModel post = postServiceImp.updatePostWithPessimistic(postId, postDto);
+                Posts post = postServiceImp.updatePostWithPessimistic(postId, postDto);
                 System.out.println(Thread.currentThread().getName()+ " Currently version "+ post.getVersion());
             }
             catch (RuntimeException ex){

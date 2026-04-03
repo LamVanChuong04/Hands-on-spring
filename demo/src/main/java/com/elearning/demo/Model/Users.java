@@ -32,7 +32,10 @@ public class Users implements UserDetails {
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @BatchSize(size = 5)
-    private List<PostModel> posts;
+    private List<Posts> posts;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Orders> orders;
 
 
     @Override
