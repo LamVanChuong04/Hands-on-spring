@@ -13,11 +13,20 @@ services:
       POSTGRES_PASSWORD: ${PASS}
     networks:
       - bridge-network
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis:/data"
+    networks:
+      - bridge-network
 
   myapp:
     build: .
     container_name: my_project
-    image: myapp:last
+    image: myapp:latest
     ports:
       - "8080:8080"
     environment:
@@ -30,6 +39,31 @@ services:
     networks:
       - bridge-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - bridge-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./Datasources.yml:/etc/grafana/Datasources.yml
+    networks:
+      - bridge-network
+
+
+
 networks:
   bridge-network:
     driver: bridge
+volumes:
+  redis:

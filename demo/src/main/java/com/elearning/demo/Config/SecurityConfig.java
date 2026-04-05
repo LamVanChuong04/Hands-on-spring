@@ -39,17 +39,21 @@ public class SecurityConfig {
                 // CSRF: demo thì disable, đi làm nên bật
                 .csrf(csrf -> csrf.disable())
 
+
+
+                // AUTHORIZATION
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/prometheus").permitAll()
+                        .requestMatchers("/login", "api/v1/**").permitAll()
+                        //.requestMatchers("/actuator/prometheus").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated()
+                )
                 // SESSION
                 .sessionManagement(session -> session
                         .maximumSessions(1) // Limit to 1 concurrent session per user
                         .maxSessionsPreventsLogin(true) // If true, prevents new login; if false, expires oldest session
                         .expiredUrl("/login?expired") // URL to redirect to if a session is expired
-                )
-
-                // AUTHORIZATION
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "api/v1/**").permitAll()
-                        .anyRequest().authenticated()
                 )
 
                 // FORM LOGIN → TẠO SESSION
